@@ -17,13 +17,46 @@ export class EmployeesComponent implements OnInit {
   constructor(public employeeService: EmployeeService) { }
 
   ngOnInit(): void {
+    this.getEmployees();
   }
 
   addEmployee(form: NgForm){
-    this.employeeService.postEmployee(form.value)
+    if(form.value._id){
+      this.employeeService.putEmployee(form.value)
+      this.resetForm(form);
+      M.toast({html: 'Updated succesfuly'});
+      this.getEmployees();
+    }else{
+      this.employeeService.postEmployee(form.value)
       .subscribe(res => {
         this.resetForm(form);
         M.toast({html: 'Save succesfuly'});
+        this.getEmployees();
+      });
+    }
+    
+    
+  }
+
+  editEmployee(employee: Employee){
+    this.employeeService.selectedEmployee = employee;
+  }
+
+  deleteEmployee(_id: string){
+    if(confirm('Are you sure you want to deleted it?')){
+      this.employeeService.deleteEmployee(_id)
+      .subscribe(res => {
+        this.getEmployees();
+        M.toast({html: 'Deletes succesfully'});
+      });
+    }
+  }
+
+  getEmployees(){
+    this.employeeService.getEmployees()
+      .subscribe(res => {
+        this.employeeService.employees = res as Employee[];
+        console.log(res);
       });
   }
 
