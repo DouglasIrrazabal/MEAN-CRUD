@@ -14,9 +14,24 @@ employeeController.createEmployee = async (req, res) => {
     });
 };
 
-employeeController.getEmployee = function(){};
+employeeController.getEmployee = async (req, res) => {
+    const employee = await employeeModel.findById(req.params.id);
+    res.json(employee);
+};
 
-employeeController.editEmployee = function(){};
+employeeController.editEmployee = async (req, res) => {
+    const { id } = req.params;
+    const employee = {
+        name: req.body.name,
+        position: req.body.position,
+        office: req.body.office,
+        salary: req.body.salary
+    };
+    await employeeModel.findByIdAndUpdate(id, {$set: employee}, {new: true});
+    res.json({
+        'status': 'Employee updated'
+    });
+};
 
 employeeController.deleteEmployee = function(){};
 
