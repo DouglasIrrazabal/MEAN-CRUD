@@ -33,6 +33,11 @@ employeeController.editEmployee = async (req, res) => {
     });
 };
 
-employeeController.deleteEmployee = function(){};
+employeeController.deleteEmployee = async (req, res) => {
+    await employeeModel.findByIdAndRemove(req.params.id);
+    res.json({
+        'status': 'Employee deleted'
+    });
+};
 
 module.exports = employeeController;
